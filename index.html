@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulário de Feedback Operacional – Vegas Vigilância & Segurança</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link
+  href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap"
+  rel="stylesheet">
+<style>
+  :root{
+    --black:#0b0b0d;
+    --black2:#111114;
+    --panel:#18181c;
+    --panel2:#1e1e23;
+    --line: rgba(255,255,255,0.09);
+    --line-strong: rgba(255,255,255,0.18);
+    --silver:#d7d7dc;
+    --silver-bright:#f4f4f6;
+    --gray:#8b8b93;
+    --gray-dim:#5c5c64;
+    --green:#5fd88a;
+    --amber:#e8c15a;
+    --red:#ea5b5b;
+    --font-display:'Space Grotesk', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+    --font-body:'Inter', sans-serif;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    background: radial-gradient(1100px at 15% -5%, rgba(255,255,255,0.05), transparent 55%),
+                radial-gradient(900px at 100% 10%, rgba(255,255,255,0.035), transparent 55%),
+                var(--black);
+    font-family: var(--font-body);
+    color: var(--silver);
+    line-height:1.55;
+    padding-bottom: 60px;
+  }
+
+  a{ color:inherit; }
+
+  /* ── HEADER ── */
+  header{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    padding: 46px 20px 34px;
+    border-bottom:1px solid var(--line);
+    background: linear-gradient(180deg, rgba(255,255,255,0.03), transparent);
+  }
+  header img{ width: min(300px, 70vw); margin-bottom: 18px; filter: drop-shadow(0 0 26px rgba(255,255,255,0.12)); }
+  header .doc-eyebrow{
+    font-family: var(--font-mono);
+    font-size:0.68rem;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color: var(--gray);
+    margin-bottom:8px;
+  }
+  header h1{
+    font-family: var(--font-display);
+    font-weight:700;
+    font-size: clamp(1.3rem, 3vw, 1.9rem);
+    letter-spacing:0.3px;
+    color: var(--silver-bright);
+  }
+
+  /* ── LAYOUT ── */
+  .wrap{ max-width: 880px; margin: 0 auto; padding: 0 20px; }
+
+  .section{
+    background: var(--panel);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding: 28px 26px;
+    margin-top: 26px;
+  }
+
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom:1px solid var(--line);
+  }
+  .section-head h2{
+    font-family: var(--font-display);
+    font-size:1.05rem;
+    font-weight:700;
+    color: var(--silver-bright);
+    letter-spacing:0.2px;
+  }
+  .weight-badge{
+    font-family: var(--font-mono);
+    font-size:0.68rem;
+    letter-spacing:1px;
+    color: var(--black);
+    background: var(--silver);
+    border-radius: 50px;
+    padding: 4px 11px;
+    white-space:nowrap;
+  }
+
+  .field-group{ display:flex; flex-direction:column; gap:6px; margin-bottom:16px; }
+  .field-group label{
+    font-family: var(--font-mono);
+    font-size:0.68rem;
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    color: var(--gray);
+  }
+  .field-row{ display:grid; grid-template-columns: repeat(2,1fr); gap:16px; }
+  .field-row.cols-3{ grid-template-columns: repeat(3,1fr); }
+  @media (max-width:640px){ .field-row, .field-row.cols-3{ grid-template-columns: 1fr; } }
+
+  input[type=text], input[type=date], input[type=number], textarea, select{
+    background: var(--panel2);
+    border:1px solid var(--line);
+    border-radius:9px;
+    padding: 11px 13px;
+    color: var(--silver-bright);
+    font-family: var(--font-body);
+    font-size: 0.96rem;
+    outline:none;
+    transition: border-color .2s, background .2s;
+    width:100%;
+    -webkit-appearance:none;
+  }
+  input:focus, textarea:focus, select:focus{
+    border-color: var(--silver);
+    background: rgba(255,255,255,0.045);
+  }
+  textarea{ resize: vertical; min-height: 64px; }
+  select option{ background:#141417; color:#fff; }
+
+  /* ── FO+ / FO- pair ── */
+  .fo-pair{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; margin-top:4px; }
+  @media (max-width:640px){ .fo-pair{ grid-template-columns:1fr; } }
+  .fo-block label{
+    display:flex; align-items:center; gap:7px;
+    font-family: var(--font-mono);
+    font-size:0.7rem;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  .fo-block.plus label{ color: var(--green); }
+  .fo-block.minus label{ color: var(--amber); }
+  .dot{ width:7px; height:7px; border-radius:50%; display:inline-block; }
+  .fo-block.plus .dot{ background: var(--green); }
+  .fo-block.minus .dot{ background: var(--amber); }
+
+  /* ── RADIO / STATUS OPTIONS ── */
+  .status-options{ display:flex; gap:10px; flex-wrap:wrap; margin: 6px 0 16px; }
+  .status-opt{
+    display:flex; align-items:center; gap:9px;
+    background: var(--panel2);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding: 10px 14px;
+    cursor:pointer;
+    font-size:0.88rem;
+    transition: border-color .2s, background .2s;
+    flex:1;
+    min-width: 180px;
+  }
+  .status-opt:hover{ border-color: rgba(255,255,255,0.3); }
+  .status-opt input{ display:none; }
+  .status-opt .radio-dot{
+    width:17px; height:17px; border-radius:50%;
+    border:2px solid var(--gray-dim);
+    position:relative; flex-shrink:0;
+    transition: border-color .2s;
+  }
+  .status-opt input:checked + .radio-dot{ border-color: var(--silver-bright); }
+  .status-opt input:checked + .radio-dot::after{
+    content:''; position:absolute; inset:3px; border-radius:50%; background: var(--silver-bright);
+  }
+
+  /* ── ITEM NUMBER STRIP ── */
+  .item-idx{
+    font-family: var(--font-mono);
+    font-size:0.7rem;
+    color: var(--gray-dim);
+    letter-spacing:1px;
+  }
+
+  /* ── NOTA GERAL ── */
+  .nota-row{ display:flex; align-items:center; gap:18px; flex-wrap:wrap; }
+  .nota-input-wrap{
+    display:flex; align-items:baseline; gap:8px;
+    background: var(--panel2);
+    border:1px solid var(--line-strong);
+    border-radius:12px;
+    padding: 14px 20px;
+  }
+  .nota-input-wrap input{
+    width:80px; border:none; background:transparent;
+    font-family: var(--font-display); font-size:2rem; font-weight:700; color: var(--silver-bright);
+    padding:0; text-align:center;
+  }
+  .nota-input-wrap span{ font-family: var(--font-mono); font-size:0.8rem; color: var(--gray); }
+
+  /* ── PLANO DE AÇÃO ── */
+  .check-grid{ display:flex; flex-direction:column; gap:10px; }
+  .check-item{
+    display:flex; align-items:center; gap:12px;
+    background: var(--panel2);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding: 12px 14px;
+    cursor:pointer;
+    transition: border-color .2s;
+  }
+  .check-item:hover{ border-color: rgba(255,255,255,0.3); }
+  .check-item input{ display:none; }
+  .check-box{
+    width:19px; height:19px; border-radius:5px;
+    border:2px solid var(--gray-dim);
+    flex-shrink:0; position:relative;
+    transition: background .2s, border-color .2s;
+  }
+  .check-item input:checked + .check-box{ background: var(--silver-bright); border-color: var(--silver-bright); }
+  .check-item input:checked + .check-box::after{
+    content:'✓'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    color:#0b0b0d; font-size:0.72rem; font-weight:900;
+  }
+  .check-item .ci-label{ font-size:0.92rem; flex:1; }
+  .reaval-days{
+    display:flex; align-items:center; gap:8px; margin-left:31px; margin-top:-4px;
+  }
+  .reaval-days input{ width:70px; padding:8px 10px; }
+  .reaval-days span{ font-size:0.82rem; color: var(--gray); }
+
+  /* ── LOCATION ── */
+  .loc-box{
+    display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+    background: var(--panel2);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding: 16px 18px;
+  }
+  .loc-status{ display:flex; align-items:center; gap:10px; font-size:0.88rem; }
+  .loc-pulse{
+    width:9px; height:9px; border-radius:50%; background: var(--gray-dim); flex-shrink:0;
+  }
+  .loc-pulse.ok{ background: var(--green); box-shadow:0 0 8px var(--green); }
+  .loc-pulse.err{ background: var(--red); box-shadow:0 0 8px var(--red); }
+  .loc-pulse.wait{ background: var(--amber); animation: blink 1.2s ease-in-out infinite; }
+  @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:.3;} }
+  .loc-text{ color: var(--gray); font-family: var(--font-mono); font-size:0.76rem; }
+  .btn-mini{
+    font-family: var(--font-mono); font-size:0.72rem; letter-spacing:1px; text-transform:uppercase;
+    background: var(--panel); border:1px solid var(--line-strong); color: var(--silver);
+    padding: 9px 15px; border-radius:8px; cursor:pointer; transition: border-color .2s, color .2s;
+    white-space:nowrap;
+  }
+  .btn-mini:hover{ border-color: var(--silver-bright); color: var(--silver-bright); }
+
+  /* ── REFERENCE TABLE ── */
+  table.ref-table{ width:100%; border-collapse:collapse; font-size:0.88rem; }
+  table.ref-table th, table.ref-table td{
+    text-align:left; padding: 9px 10px; border-bottom:1px solid var(--line);
+  }
+  table.ref-table th{
+    font-family: var(--font-mono); font-size:0.68rem; text-transform:uppercase; letter-spacing:1px; color: var(--gray);
+  }
+  table.ref-table td:last-child, table.ref-table th:last-child{ text-align:right; font-family: var(--font-mono); color: var(--silver-bright); }
+
+  .legend{ display:flex; flex-direction:column; gap:10px; margin-top:18px; }
+  .legend-item{ display:flex; gap:10px; font-size:0.86rem; color: var(--gray); }
+  .legend-item b{ color: var(--silver-bright); }
+
+  /* ── SETTINGS (Apps Script) ── */
+  .settings-toggle{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    font-family: var(--font-mono); font-size:0.7rem; letter-spacing:1px; text-transform:uppercase;
+    color: var(--gray-dim); cursor:pointer; margin: 30px auto 0; width:fit-content;
+    padding: 8px 16px; border-radius:50px; border:1px solid transparent; transition: border-color .2s, color .2s;
+  }
+  .settings-toggle:hover{ color: var(--gray); border-color: var(--line); }
+  #settingsPanel{ display:none; }
+  #settingsPanel.open{ display:block; }
+  .settings-note{ font-size:0.8rem; color: var(--gray-dim); margin-top:8px; line-height:1.5; }
+
+  /* ── SUBMIT BAR ── */
+  .submit-bar{
+    display:flex; gap:12px; flex-wrap:wrap; margin-top:26px;
+  }
+  .btn-primary, .btn-secondary{
+    font-family: var(--font-mono); font-weight:700; font-size:0.82rem; letter-spacing:1.5px; text-transform:uppercase;
+    padding: 16px 24px; border-radius:11px; cursor:pointer; border:none; flex:1; min-width:200px;
+    transition: transform .2s, box-shadow .2s, background .2s;
+  }
+  .btn-primary{ background: linear-gradient(135deg, var(--silver-bright), var(--silver)); color:#0b0b0d; }
+  .btn-primary:hover{ transform: translateY(-2px); box-shadow: 0 10px 30px rgba(255,255,255,0.15); }
+  .btn-secondary{ background: transparent; border:1px solid var(--line-strong); color: var(--silver); }
+  .btn-secondary:hover{ border-color: var(--silver-bright); color: var(--silver-bright); }
+
+  #formMsg{
+    margin-top:16px; padding: 14px 16px; border-radius:10px; font-size:0.88rem; display:none;
+  }
+  #formMsg.show{ display:block; }
+  #formMsg.ok{ background: rgba(95,216,138,0.1); border:1px solid rgba(95,216,138,0.35); color: var(--green); }
+  #formMsg.err{ background: rgba(234,91,91,0.1); border:1px solid rgba(234,91,91,0.35); color: var(--red); }
+  #formMsg.warn{ background: rgba(232,193,90,0.1); border:1px solid rgba(232,193,90,0.35); color: var(--amber); }
+
+  footer{ text-align:center; padding: 40px 20px 10px; color: var(--gray-dim); font-size:0.76rem; letter-spacing:0.4px; }
+
+  @media print{
+    .settings-toggle, #settingsPanel, .submit-bar, .btn-mini{ display:none !important; }
+    body{ background:#fff; color:#111; }
+    .section{ background:#fff; border:1px solid #ccc; }
+  }
+</style>
+</head>
+
+<body>
+
+<header>
+  <img src="assets/logovegas.png" alt="Vegas Vigilância e Segurança">
+  <div class="doc-eyebrow">Documento Interno · Uso Operacional</div>
+  <h1>Formulário de Feedback Operacional</h1>
+</header>
+
+<div class="wrap">
+  <form id="feedbackForm">
+
+    <!-- IDENTIFICAÇÃO -->
+    <div class="section">
+      <div class="section-head"><h2>Identificação</h2></div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Colaborador</label>
+          <input type="text" id="colaborador" required>
+        </div>
+        <div class="field-group">
+          <label>Função</label>
+          <input type="text" id="funcao" required>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Posto</label>
+          <input type="text" id="posto" required>
+        </div>
+        <div class="field-group">
+          <label>Supervisor</label>
+          <input type="text" id="supervisor" required>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field-group">
+          <label>Data da avaliação</label>
+          <input type="date" id="dataAvaliacao" required>
+        </div>
+        <div class="field-group">
+          <label>Localização de preenchimento</label>
+          <div class="loc-box">
+            <div class="loc-status">
+              <span class="loc-pulse" id="locPulse"></span>
+              <span class="loc-text" id="locText">Localização não capturada</span>
+            </div>
+            <button type="button" class="btn-mini" id="locBtn" onclick="capturarLocalizacao()">Capturar localização</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ITENS DE AVALIAÇÃO -->
+    <div class="section">
+      <div class="section-head">
+        <h2><span class="item-idx">01 /13</span> &nbsp;Apresentação Pessoal</h2>
+        <span class="weight-badge">peso 10%</span>
+      </div>
+      <div class="fo-pair">
+        <div class="fo-block plus"><label><span class="dot"></span>FO+ Ponto forte</label><textarea id="apresentacao_pos"></textarea></div>
+        <div class="fo-block minus"><label><span class="dot"></span>FO- Ponto de melhoria</label><textarea id="apresentacao_neg"></textarea></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2><span class="item-idx">02 /13</span> &nbsp;Uso do Uniforme Padrão da Empresa</h2>
+        <span class="weight-badge">peso 10%</span>
+      </div>
+      <div class="fo-pair">
+        <div class="fo-block plus"><label><span class="dot"></span>FO+ Ponto forte</label><textarea id="uniforme_pos"></textarea></div>
+        <div class="fo-block minus"><label><span class="dot"></span>FO- Ponto de melhoria</label><textarea id="uniforme_neg"></textarea></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2><span class="item-idx">03 /13</span> &nbsp;Postura Profissional</h2>
+        <span class="weight-badge">peso 10%</span>
+      </div>
+      <div class="fo-pair">
+        <div class="fo-block plus"><label><span class="dot"></span>FO+ Ponto forte</label><textarea id="postura_pos"></textarea></div>
+        <div class="fo-block minus"><label><span class="dot"></span>FO- Ponto de melhoria</label><textarea id="postura_neg"></textarea></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2><span class="item-idx">04 /13</span> &nbsp;Conduta</h2>
+        <span class="weight-badge">peso 10%</span>
+      </div>
+      <div class="fo-pair">
+        <div class="fo-block plus"><label><span class="dot"></span>FO+ Ponto forte</label><textarea id="conduta_pos"></textarea></div>
+        <div class="fo-block minus"><label><span class="dot"></span>FO- Ponto de melhoria</label><textarea id="conduta_neg"></textarea></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2><span class="item-idx">05 /13</span> &nbsp;Disciplina</h2>
+        <span class="weight-badge">peso 15%</span>
+      </div>
+      <div class="fo-pair">
+        <div class="fo-block plus"><label><span class="dot"></span>FO+ Ponto forte</label><textarea id="disciplina_pos"></textarea></div>
+        <div class="fo-block minus"><label><span class="dot"></span>FO- Ponto de melhoria</label><textarea id="disciplina_neg"></textarea></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2><span class="item-idx">06 /13</span> &nbsp;Horário de Assunção do Posto</h2>
+        <span class="weight-badge">peso 10%</span>
+      </div>
+      <div class="status-options">
+        <label class="status-opt"><input type="radio" name="assuncao_status" value="Sempre pontual"><span class="radio-dot"></span>Sempre pontual</label>
+        <label class="status-opt"><input type="radio" name="assuncao_status" value="Eventuais atrasos"><span class="radio-dot"></span>Eventuais atrasos</label>
+      </div>
+      <div class="fo-pair">
+        <div class="fo-block plus"><label><span class="dot"></span>FO+ Ponto forte</label><textarea id="assuncao_pos"></textarea></div>
+        <div class="fo-block minus"><label><span class="dot"></span>FO- Ponto de melhoria</label><textarea id="assuncao_neg"></textarea></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2><span class="item-idx">07 /13</span> &nbsp;Horários de Intervalo (Almoço/Lanche)</h2>
+        <span class="weight-badge">peso 10%</span>
+      </div>
+      <div class="status-options">
+        <label class="status-opt"><input type="radio" name="intervalo_status" value="Conforme procedimento"><span class="radio-dot"></span>Conforme procedimento</label>
+        <label class="status-opt"><input type="radio" name="intervalo_status" value="Necessita melhorias"><span class="radio-dot"></span>Necessita melhorias</label>
+      </div>
+      <div class="fo-pair">
+        <div class="fo-block plus"><label><span class="dot"></span>FO+ Ponto forte</label><textarea id="intervalo_pos"></textarea></div>
+        <div class="fo-block minus"><label><span class="dot"></span>FO- Ponto de melhoria</label><textarea id="intervalo_neg"></textarea></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2><span class="item-idx">08 /13</span> &nbsp;Horário de Término do Serviço</h2>
+        <span class="weight-badge">peso 10%</span>
+      </div>
+      <div class="status-options">
+        <label class="status-opt"><input type="radio" name="termino_status" value="Conforme escala"><span class="radio-dot"></span>Conforme escala</label>
+        <label class="status-opt"><input type="radio" name="termino_status" value="Necessita melhorias"><span class="radio-dot"></span>Necessita melhorias</label>
+      </div>
+      <div class="fo-pair">
+        <div class="fo-block plus"><label><span class="dot"></span>FO+ Ponto forte</label><textarea id="termino_pos"></textarea></div>
+        <div class="fo-block minus"><label><span class="dot"></span>FO- Ponto de melhoria</label><textarea id="termino_neg"></textarea></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head">
+        <h2><span class="item-idx">09 /13</span> &nbsp;Rondas</h2>
+        <span class="weight-badge">peso 15%</span>
+      </div>
+      <p style="font-size:0.85rem; color:var(--gray); margin-bottom:14px;">
+        Considerar: cumprimento dos horários estabelecidos, qualidade das rondas e registros realizados corretamente.
+      </p>
+      <div class="fo-pair">
+        <div class="fo-block plus"><label><span class="dot"></span>FO+ Ponto forte</label><textarea id="rondas_pos"></textarea></div>
+        <div class="fo-block minus"><label><span class="dot"></span>FO- Ponto de melhoria</label><textarea id="rondas_neg"></textarea></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h2><span class="item-idx">10 /13</span> &nbsp;Comunicação com a Supervisão</h2></div>
+      <div class="fo-pair">
+        <div class="fo-block plus"><label><span class="dot"></span>FO+ Ponto forte</label><textarea id="comunicacao_pos"></textarea></div>
+        <div class="fo-block minus"><label><span class="dot"></span>FO- Ponto de melhoria</label><textarea id="comunicacao_neg"></textarea></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h2><span class="item-idx">11 /13</span> &nbsp;Cumprimento dos Procedimentos Operacionais</h2></div>
+      <div class="fo-pair">
+        <div class="fo-block plus"><label><span class="dot"></span>FO+ Ponto forte</label><textarea id="procedimentos_pos"></textarea></div>
+        <div class="fo-block minus"><label><span class="dot"></span>FO- Ponto de melhoria</label><textarea id="procedimentos_neg"></textarea></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h2><span class="item-idx">12 /13</span> &nbsp;Pró-atividade</h2></div>
+      <div class="fo-pair">
+        <div class="fo-block plus"><label><span class="dot"></span>FO+ Ponto forte</label><textarea id="proatividade_pos"></textarea></div>
+        <div class="fo-block minus"><label><span class="dot"></span>FO- Ponto de melhoria</label><textarea id="proatividade_neg"></textarea></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-head"><h2><span class="item-idx">13 /13</span> &nbsp;Relacionamento com Cliente e Equipe</h2></div>
+      <div class="fo-pair">
+        <div class="fo-block plus"><label><span class="dot"></span>FO+ Ponto forte</label><textarea id="relacionamento_pos"></textarea></div>
+        <div class="fo-block minus"><label><span class="dot"></span>FO- Ponto de melhoria</label><textarea id="relacionamento_neg"></textarea></div>
+      </div>
+    </div>
+
+    <!-- AVALIAÇÃO FINAL -->
+    <div class="section">
+      <div class="section-head"><h2>Avaliação Final</h2></div>
+      <div class="field-group">
+        <label>Nota geral</label>
+        <div class="nota-row">
+          <div class="nota-input-wrap">
+            <input type="number" id="notaGeral" min="0" max="10" step="0.1" placeholder="0.0">
+            <span>/ 10</span>
+          </div>
+        </div>
+      </div>
+      <div class="field-group" style="margin-top:14px;">
+        <label>Parecer do supervisor</label>
+        <textarea id="parecer" style="min-height:110px;"></textarea>
+      </div>
+    </div>
+
+    <!-- PLANO DE AÇÃO -->
+    <div class="section">
+      <div class="section-head"><h2>Plano de Ação</h2></div>
+      <div class="check-grid">
+        <label class="check-item"><input type="checkbox" name="plano" value="Manter desempenho"><span class="check-box"></span><span class="ci-label">Manter desempenho</span></label>
+        <label class="check-item"><input type="checkbox" name="plano" value="Realizar orientação verbal"><span class="check-box"></span><span class="ci-label">Realizar orientação verbal</span></label>
+        <label class="check-item"><input type="checkbox" name="plano" value="Realizar treinamento"><span class="check-box"></span><span class="ci-label">Realizar treinamento</span></label>
+        <label class="check-item"><input type="checkbox" name="plano" value="Acompanhamento pela Supervisão"><span class="check-box"></span><span class="ci-label">Acompanhamento pela Supervisão</span></label>
+        <label class="check-item"><input type="checkbox" name="plano" value="Advertência"><span class="check-box"></span><span class="ci-label">Advertência (quando aplicável)</span></label>
+        <label class="check-item"><input type="checkbox" id="reavaliacaoCheck" name="plano" value="Reavaliação"><span class="check-box"></span><span class="ci-label">Reavaliação em</span></label>
+      </div>
+      <div class="reaval-days">
+        <input type="number" id="reavaliacaoDias" min="0" placeholder="0">
+        <span>dias</span>
+      </div>
+    </div>
+
+    <!-- CIÊNCIA -->
+    <div class="section">
+      <div class="section-head"><h2>Ciência</h2></div>
+      <div class="field-row cols-3">
+        <div class="field-group">
+          <label>Supervisor</label>
+          <input type="text" id="cienciaSupervisor">
+        </div>
+        <div class="field-group">
+          <label>Colaborador</label>
+          <input type="text" id="cienciaColaborador">
+        </div>
+        <div class="field-group">
+          <label>Data</label>
+          <input type="date" id="cienciaData">
+        </div>
+      </div>
+    </div>
+
+    <!-- REFERÊNCIA: CRITÉRIOS E CONCEITOS -->
+    <div class="section">
+      <div class="section-head"><h2>Critérios de Avaliação da Vegas</h2></div>
+      <table class="ref-table">
+        <thead><tr><th>Item</th><th>Peso</th></tr></thead>
+        <tbody>
+          <tr><td>Apresentação Pessoal</td><td>10%</td></tr>
+          <tr><td>Uniforme Completo</td><td>10%</td></tr>
+          <tr><td>Postura</td><td>10%</td></tr>
+          <tr><td>Conduta</td><td>10%</td></tr>
+          <tr><td>Disciplina</td><td>15%</td></tr>
+          <tr><td>Assunção no Horário</td><td>10%</td></tr>
+          <tr><td>Intervalos</td><td>10%</td></tr>
+          <tr><td>Término do Serviço</td><td>10%</td></tr>
+          <tr><td>Rondas</td><td>15%</td></tr>
+        </tbody>
+      </table>
+      <div class="legend">
+        <div class="legend-item">🟢 <span><b>FO+:</b> comportamento ou prática que deve ser mantida e valorizada.</span></div>
+        <div class="legend-item">🟡 <span><b>FO-:</b> oportunidade de melhoria, com orientação e plano de ação.</span></div>
+        <div class="legend-item">🔴 <span>Reincidências podem resultar em medidas disciplinares, conforme o regulamento interno da Vegas Vigilância &amp; Segurança.</span></div>
+      </div>
+    </div>
+
+    <div id="formMsg"></div>
+
+    <div class="submit-bar">
+      <button type="submit" class="btn-primary" id="submitBtn">Enviar avaliação</button>
+      <button type="button" class="btn-secondary" onclick="baixarJSON()">Baixar cópia (JSON)</button>
+      <button type="button" class="btn-secondary" onclick="window.print()">Imprimir</button>
+    </div>
+
+  </form>
+
+  <div class="settings-toggle" onclick="toggleSettings()">⚙ Configuração de integração (Google Sheets)</div>
+  <div class="section" id="settingsPanel">
+    <div class="section-head"><h2>Integração com Google Apps Script</h2></div>
+    <div class="field-group">
+      <label>URL do Web App (Apps Script)</label>
+      <input type="text" id="appscriptUrl" placeholder="https://script.google.com/macros/s/SEU_ID/exec">
+    </div>
+    <button type="button" class="btn-mini" onclick="salvarUrl()">Salvar URL</button>
+    <p class="settings-note">
+      Cole aqui a URL de implantação (Web App) do seu Google Apps Script quando o dashboard estiver pronto.
+      A URL fica salva neste navegador. Enquanto não for configurada, use "Baixar cópia (JSON)" para não perder
+      nenhuma avaliação.
+    </p>
+  </div>
+</div>
+
+<footer>
+  Vegas Vigilância &amp; Segurança · Documento interno de uso operacional
+</footer>
+
+<script>
+  // Data padrão de hoje
+  document.getElementById('dataAvaliacao').valueAsDate = new Date();
+
+  /* ---------- LOCALIZAÇÃO ---------- */
+  let localizacaoCapturada = null;
+
+  function setLocStatus(state, text){
+    const pulse = document.getElementById('locPulse');
+    pulse.className = 'loc-pulse' + (state ? ' ' + state : '');
+    document.getElementById('locText').textContent = text;
+  }
+
+  async function reverseGeocode(lat, lon){
+    try{
+      const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&zoom=14&addressdetails=1`);
+      const data = await res.json();
+      return data && data.display_name ? data.display_name : null;
+    }catch(err){ return null; }
+  }
+
+  function capturarLocalizacao(){
+    if(!navigator.geolocation){
+      setLocStatus('err', 'Geolocalização não suportada neste navegador');
+      return;
+    }
+    setLocStatus('wait', 'Solicitando permissão de localização…');
+    navigator.geolocation.getCurrentPosition(async pos => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+      localizacaoCapturada = { lat, lon, precisao_m: Math.round(pos.coords.accuracy), endereco: null };
+      setLocStatus('ok', `${lat.toFixed(5)}, ${lon.toFixed(5)}`);
+      const endereco = await reverseGeocode(lat, lon);
+      if(endereco){
+        localizacaoCapturada.endereco = endereco;
+        setLocStatus('ok', endereco);
+      }
+    }, err => {
+      setLocStatus('err', 'Permissão negada ou indisponível — capture manualmente ao enviar');
+    }, { enableHighAccuracy:true, timeout:10000 });
+  }
+
+  // Tenta capturar automaticamente ao abrir a página
+  window.addEventListener('load', capturarLocalizacao);
+
+  /* ---------- CONFIGURAÇÃO APPS SCRIPT ---------- */
+  const urlInput = document.getElementById('appscriptUrl');
+  urlInput.value = localStorage.getItem('vegas_appscript_url') || '';
+
+  function toggleSettings(){
+    document.getElementById('settingsPanel').classList.toggle('open');
+  }
+
+  function salvarUrl(){
+    localStorage.setItem('vegas_appscript_url', urlInput.value.trim());
+    mostrarMsg('ok', 'URL de integração salva neste navegador.');
+  }
+
+  /* ---------- COLETA DE DADOS ---------- */
+  function coletarDados(){
+    const val = id => document.getElementById(id).value.trim();
+    const radio = name => { const el = document.querySelector(`input[name="${name}"]:checked`); return el ? el.value : null; };
+    const planoSelecionado = Array.from(document.querySelectorAll('input[name="plano"]:checked')).map(el => el.value);
+
+    return {
+      colaborador: val('colaborador'),
+      funcao: val('funcao'),
+      posto: val('posto'),
+      supervisor: val('supervisor'),
+      dataAvaliacao: val('dataAvaliacao'),
+      itens: {
+        apresentacao: { fo_mais: val('apresentacao_pos'), fo_menos: val('apresentacao_neg') },
+        uniforme: { fo_mais: val('uniforme_pos'), fo_menos: val('uniforme_neg') },
+        postura: { fo_mais: val('postura_pos'), fo_menos: val('postura_neg') },
+        conduta: { fo_mais: val('conduta_pos'), fo_menos: val('conduta_neg') },
+        disciplina: { fo_mais: val('disciplina_pos'), fo_menos: val('disciplina_neg') },
+        assuncaoPosto: { status: radio('assuncao_status'), fo_mais: val('assuncao_pos'), fo_menos: val('assuncao_neg') },
+        intervalos: { status: radio('intervalo_status'), fo_mais: val('intervalo_pos'), fo_menos: val('intervalo_neg') },
+        terminoServico: { status: radio('termino_status'), fo_mais: val('termino_pos'), fo_menos: val('termino_neg') },
+        rondas: { fo_mais: val('rondas_pos'), fo_menos: val('rondas_neg') },
+        comunicacao: { fo_mais: val('comunicacao_pos'), fo_menos: val('comunicacao_neg') },
+        procedimentos: { fo_mais: val('procedimentos_pos'), fo_menos: val('procedimentos_neg') },
+        proatividade: { fo_mais: val('proatividade_pos'), fo_menos: val('proatividade_neg') },
+        relacionamento: { fo_mais: val('relacionamento_pos'), fo_menos: val('relacionamento_neg') }
+      },
+      notaGeral: val('notaGeral'),
+      parecer: val('parecer'),
+      planoAcao: planoSelecionado,
+      reavaliacaoDias: val('reavaliacaoDias'),
+      ciencia: { supervisor: val('cienciaSupervisor'), colaborador: val('cienciaColaborador'), data: val('cienciaData') },
+      localizacao: localizacaoCapturada,
+      enviadoEm: new Date().toISOString()
+    };
+  }
+
+  function mostrarMsg(tipo, texto){
+    const el = document.getElementById('formMsg');
+    el.className = 'show ' + tipo;
+    el.textContent = texto;
+  }
+
+  function baixarJSON(){
+    const dados = coletarDados();
+    const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const nomeArquivo = (dados.colaborador || 'avaliacao').replace(/\s+/g, '_');
+    a.href = url;
+    a.download = `feedback_${nomeArquivo}_${dados.dataAvaliacao || ''}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  /* ---------- ENVIO ---------- */
+  document.getElementById('feedbackForm').addEventListener('submit', async function(e){
+    e.preventDefault();
+    const dados = coletarDados();
+    const url = localStorage.getItem('vegas_appscript_url');
+    const btn = document.getElementById('submitBtn');
+
+    if(!url){
+      mostrarMsg('warn', 'Integração com o Google Sheets ainda não configurada. Use "Baixar cópia (JSON)" para guardar esta avaliação, ou configure a URL do Apps Script abaixo.');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Enviando…';
+
+    try{
+      await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(dados)
+      });
+      mostrarMsg('ok', 'Avaliação enviada com sucesso.');
+      this.reset();
+      localizacaoCapturada = null;
+      setLocStatus('', 'Localização não capturada');
+      document.getElementById('dataAvaliacao').valueAsDate = new Date();
+      capturarLocalizacao();
+    }catch(err){
+      mostrarMsg('err', 'Não foi possível enviar agora. Baixe a cópia em JSON para não perder os dados e tente novamente depois.');
+    }finally{
+      btn.disabled = false;
+      btn.textContent = 'Enviar avaliação';
+    }
+  });
+</script>
+
+</body>
+</html>
