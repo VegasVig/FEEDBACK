@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Formulário de Feedback Operacional – Vegas Vigilância & Segurança</title>
+<title>Formulário de Feedback Operacional Vegas Vigilância & Segurança</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link
   href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap"
@@ -340,27 +340,27 @@
       <div class="field-row">
         <div class="field-group">
           <label>Colaborador</label>
-          <input type="text" id="colaborador" required>
+          <input type="text" id="colaborador">
         </div>
         <div class="field-group">
           <label>Função</label>
-          <input type="text" id="funcao" required>
+          <input type="text" id="funcao">
         </div>
       </div>
       <div class="field-row">
         <div class="field-group">
           <label>Posto</label>
-          <input type="text" id="posto" required>
+          <input type="text" id="posto">
         </div>
         <div class="field-group">
           <label>Supervisor</label>
-          <input type="text" id="supervisor" required>
+          <input type="text" id="supervisor">
         </div>
       </div>
       <div class="field-row">
         <div class="field-group">
           <label>Data da avaliação</label>
-          <input type="date" id="dataAvaliacao" required>
+          <input type="date" id="dataAvaliacao">
         </div>
         <div class="field-group">
           <label>Localização de preenchimento</label>
@@ -563,15 +563,15 @@
       <div class="field-row cols-3">
         <div class="field-group">
           <label>Supervisor</label>
-          <input type="text" id="cienciaSupervisor">
+          <input type="text" id="cienciaSupervisor" readonly>
         </div>
         <div class="field-group">
           <label>Colaborador</label>
-          <input type="text" id="cienciaColaborador">
+          <input type="text" id="cienciaColaborador" readonly>
         </div>
         <div class="field-group">
           <label>Data</label>
-          <input type="date" id="cienciaData">
+          <input type="date" id="cienciaData" readonly>
         </div>
       </div>
     </div>
@@ -615,8 +615,8 @@
 </footer>
 
 <script>
-  /* ---------- URL FIXA DO APPS SCRIPT ----------
-    
+  /* ---------- URL FIXA DO APPS SCRIPT ---------- */
+  let enviando = false;
   const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxXYWzwxj0OKEZTqdQ0h1gte6xlrRi59Hiv13R6ZACbWGf_ZVSMaZlPG_ObMsHurDd1/exec";
   function urlAtiva(){
     const c = WEBAPP_URL.trim();
@@ -711,8 +711,19 @@
     el.textContent = texto;
   }
 
+  /* ---------- SINCRONIZA CIÊNCIA COM O TOPO ---------- */
+  function sincronizarCiencia(){
+    const v = id => document.getElementById(id).value;
+    document.getElementById('cienciaSupervisor').value = v('supervisor');
+    document.getElementById('cienciaColaborador').value = v('colaborador');
+    document.getElementById('cienciaData').value = v('dataAvaliacao');
+  }
+  ['supervisor','colaborador','dataAvaliacao'].forEach(id=>{
+    document.getElementById(id).addEventListener('input', sincronizarCiencia);
+  });
+  sincronizarCiencia();
+
   /* ---------- ENVIO ---------- */
- 
 document.getElementById('feedbackForm').addEventListener('submit', async function(e){
   e.preventDefault();
   if(enviando) return;
@@ -730,6 +741,7 @@ document.getElementById('feedbackForm').addEventListener('submit', async functio
   btn.setAttribute('aria-busy', 'true');
   btn.textContent = 'Enviando…';
 
+  sincronizarCiencia();
   const dados = coletarDados();
   const inicio = Date.now();
 
