@@ -712,39 +712,46 @@
   }
 
   /* ---------- ENVIO ---------- */
-  document.getElementById('feedbackForm').addEventListener('submit', async function(e){
-    e.preventDefault();
-    const dados = coletarDados();
-    const url = urlAtiva();
-    const btn = document.getElementById('submitBtn');
+ 
+document.getElementById('feedbackForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  if(enviando) return;
 
-    if(!url){
-      mostrarMsg('warn', 'Integração com o Google Sheets ainda não configurada. Configure a URL do Apps Script abaixo.');
-      return;
-    }
+  const url = urlAtiva();
+  const btn = document.getElementById('submitBtn');
 
-    btn.disabled = true;
-    btn.textContent = 'Enviando…';
+  if(!url){
+    mostrarMsg('warn', 'Integração com o Google Sheets ainda não configurada. Configure a URL do Apps Script abaixo.');
+    return;
+  }
 
-    try{
-      await fetch(url, {
-        method: 'POST',
-        mode: 'no-cors',
-        body: JSON.stringify(dados)
-      });
-      mostrarMsg('ok', 'Avaliação enviada com sucesso.');
-      this.reset();
-      localizacaoCapturada = null;
-      setLocStatus('', 'Localização não capturada');
-      document.getElementById('dataAvaliacao').valueAsDate = new Date();
-      capturarLocalizacao();
-    }catch(err){
-      mostrarMsg('err', 'Não foi possível enviar agora. Verifique a conexão e tente novamente.');
-    }finally{
-      btn.disabled = false;
-      btn.textContent = 'Enviar avaliação';
-    }
-  });
+  enviando = true;
+  btn.disabled = true;
+  btn.setAttribute('aria-busy', 'true');
+  btn.textContent = 'Enviando…';
+
+  const dados = coletarDados();
+  const inicio = Date.now();
+
+  try{
+    await fetch(url, { method:'POST', mode:'no-cors', body: JSON.stringify(dados) });
+    const restante = 600 - (Date.now() - inicio);
+    if(restante > 0) await new Promise(r => setTimeout(r, restante));
+    mostrarMsg('ok', 'Avaliação enviada com sucesso.');
+    this.reset();
+    localizacaoCapturada = null;
+    setLocStatus('', 'Localização não capturada');
+    document.getElementById('dataAvaliacao').valueAsDate = new Date();
+    capturarLocalizacao();
+  }catch(err){
+    mostrarMsg('err', 'Não foi possível enviar agora. Verifique a conexão e tente novamente.');
+  }finally{
+    enviando = false;
+    btn.disabled = false;
+    btn.removeAttribute('aria-busy');
+    btn.textContent = 'Enviar avaliação';
+  }
+});
 </script>
 
 </body>
