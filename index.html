@@ -604,26 +604,10 @@
 
     <div class="submit-bar">
       <button type="submit" class="btn-primary" id="submitBtn">Enviar avaliação</button>
-      <button type="button" class="btn-secondary" onclick="baixarJSON()">Baixar cópia (JSON)</button>
-      <button type="button" class="btn-secondary" onclick="window.print()">Imprimir</button>
     </div>
 
   </form>
 
-  <div class="settings-toggle" onclick="toggleSettings()">⚙ Configuração de integração (Google Sheets)</div>
-  <div class="section" id="settingsPanel">
-    <div class="section-head"><h2>Integração com Google Apps Script</h2></div>
-    <div class="field-group">
-      <label>URL do Web App (Apps Script)</label>
-      <input type="text" id="appscriptUrl" placeholder="https://script.google.com/macros/s/SEU_ID/exec">
-    </div>
-    <button type="button" class="btn-mini" onclick="salvarUrl()">Salvar URL</button>
-    <p class="settings-note">
-      Cole aqui a URL de implantação (Web App) do seu Google Apps Script quando o dashboard estiver pronto.
-      A URL fica salva neste navegador. Enquanto não for configurada, use "Baixar cópia (JSON)" para não perder
-      nenhuma avaliação.
-    </p>
-  </div>
 </div>
 
 <footer>
@@ -631,6 +615,15 @@
 </footer>
 
 <script>
+  /* ---------- URL FIXA DO APPS SCRIPT ----------
+    
+  const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbxXYWzwxj0OKEZTqdQ0h1gte6xlrRi59Hiv13R6ZACbWGf_ZVSMaZlPG_ObMsHurDd1/exec";
+  function urlAtiva(){
+    const c = WEBAPP_URL.trim();
+    if(c && !c.includes('SEU_ID')) return c;
+    return localStorage.getItem('vegas_appscript_url') || '';
+  }
+
   // Data padrão de hoje
   document.getElementById('dataAvaliacao').valueAsDate = new Date();
 
@@ -675,19 +668,6 @@
   // Tenta capturar automaticamente ao abrir a página
   window.addEventListener('load', capturarLocalizacao);
 
-  /* ---------- CONFIGURAÇÃO APPS SCRIPT ---------- */
-  const urlInput = document.getElementById('appscriptUrl');
-  urlInput.value = localStorage.getItem('vegas_appscript_url') || '';
-
-  function toggleSettings(){
-    document.getElementById('settingsPanel').classList.toggle('open');
-  }
-
-  function salvarUrl(){
-    localStorage.setItem('vegas_appscript_url', urlInput.value.trim());
-    mostrarMsg('ok', 'URL de integração salva neste navegador.');
-  }
-
   /* ---------- COLETA DE DADOS ---------- */
   function coletarDados(){
     const val = id => document.getElementById(id).value.trim();
@@ -731,27 +711,15 @@
     el.textContent = texto;
   }
 
-  function baixarJSON(){
-    const dados = coletarDados();
-    const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    const nomeArquivo = (dados.colaborador || 'avaliacao').replace(/\s+/g, '_');
-    a.href = url;
-    a.download = `feedback_${nomeArquivo}_${dados.dataAvaliacao || ''}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
   /* ---------- ENVIO ---------- */
   document.getElementById('feedbackForm').addEventListener('submit', async function(e){
     e.preventDefault();
     const dados = coletarDados();
-    const url = localStorage.getItem('vegas_appscript_url');
+    const url = urlAtiva();
     const btn = document.getElementById('submitBtn');
 
     if(!url){
-      mostrarMsg('warn', 'Integração com o Google Sheets ainda não configurada. Use "Baixar cópia (JSON)" para guardar esta avaliação, ou configure a URL do Apps Script abaixo.');
+      mostrarMsg('warn', 'Integração com o Google Sheets ainda não configurada. Configure a URL do Apps Script abaixo.');
       return;
     }
 
@@ -761,6 +729,7 @@
     try{
       await fetch(url, {
         method: 'POST',
+        mode: 'no-cors',
         body: JSON.stringify(dados)
       });
       mostrarMsg('ok', 'Avaliação enviada com sucesso.');
@@ -770,7 +739,7 @@
       document.getElementById('dataAvaliacao').valueAsDate = new Date();
       capturarLocalizacao();
     }catch(err){
-      mostrarMsg('err', 'Não foi possível enviar agora. Baixe a cópia em JSON para não perder os dados e tente novamente depois.');
+      mostrarMsg('err', 'Não foi possível enviar agora. Verifique a conexão e tente novamente.');
     }finally{
       btn.disabled = false;
       btn.textContent = 'Enviar avaliação';
