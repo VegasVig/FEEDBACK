@@ -202,10 +202,17 @@
     border-radius:12px;
     padding: 14px 20px;
   }
-  .nota-input-wrap input{
-    width:80px; border:none; background:transparent;
+  .nota-input-wrap input,
+  .nota-input-wrap select{
+    width:110px; border:none; background:transparent;
     font-family: var(--font-display); font-size:2rem; font-weight:700; color: var(--silver-bright);
-    padding:0; text-align:center;
+    padding:0; text-align:center; cursor:pointer;
+    -webkit-appearance:none; appearance:none;
+  }
+  .nota-input-wrap select option{
+    background: var(--panel2);
+    color: var(--silver-bright);
+    font-size:1rem;
   }
   .nota-input-wrap span{ font-family: var(--font-mono); font-size:0.8rem; color: var(--gray); }
 
@@ -529,7 +536,20 @@
         <label>Nota geral</label>
         <div class="nota-row">
           <div class="nota-input-wrap">
-            <input type="number" id="notaGeral" min="0" max="10" step="0.1" placeholder="0.0">
+            <select id="notaGeral">
+              <option value="">Selecione</option>
+              <option value="0">0</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+              <option value="5">5</option>
+              <option value="6">6</option>
+              <option value="7">7</option>
+              <option value="8">8</option>
+              <option value="9">9</option>
+              <option value="10">10</option>
+            </select>
             <span>/ 10</span>
           </div>
         </div>
